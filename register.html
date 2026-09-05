@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Travel Planner - Register</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <div class="logo">
+        ✈️ AI Travel Planner
+    </div>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="login.html">Login</a>
+        <a href="register.html">Register</a>
+    </nav>
+
+</header>
+
+
+<section class="auth-page">
+
+    <div class="auth-card">
+
+        <h1>📝 Create Account</h1>
+
+        <p>
+            Create your account to start planning your trips.
+        </p>
+
+
+        <form id="registerForm">
+
+            <div class="form-group">
+
+                <label>Full Name</label>
+
+                <input
+                    type="text"
+                    id="name"
+                    placeholder="Enter your full name"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Email Address</label>
+
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="Enter your email"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Password</label>
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Create a password"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Confirm Password</label>
+
+                <input
+                    type="password"
+                    id="confirmPassword"
+                    placeholder="Confirm your password"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-options">
+
+                <label>
+                    <input type="checkbox" id="terms" required>
+                    I agree to the Terms & Conditions
+                </label>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="auth-btn">
+
+                🚀 Create Account
+
+            </button>
+
+        </form>
+
+
+        <p id="message"></p>
+
+
+        <div class="auth-links">
+
+            <p>
+                Already have an account?
+                <a href="login.html">Login</a>
+            </p>
+
+            <p>
+                <a href="index.html">← Back to Home</a>
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<footer class="footer">
+
+    <div class="footer-content">
+
+        <h3>✈️ AI Travel Planner</h3>
+
+        <p>
+            Smart travel planning powered by Artificial Intelligence.
+        </p>
+
+        <p>
+            <strong>Project Developer:</strong>
+            Pratiksha Anil Kharat
+        </p>
+
+        <p>
+            <strong>Branch:</strong>
+            Computer Science Engineering
+        </p>
+
+        <p>
+            <strong>College:</strong>
+            AGCE Polytechnic College, Satara
+        </p>
+
+        <p>
+            <strong>Inplant Training:</strong>
+            2026
+        </p>
+
+        <p>
+            © 2026 AI Travel Planner
+        </p>
+
+    </div>
+
+</footer>
+
+
+<!-- FIREBASE -->
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+
+import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    updateProfile
+}
+from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+
+
+/* FIREBASE CONFIG */
+
+const firebaseConfig = {
+
+    apiKey: "AIzaSyADHbNA-D_xjtaKSVxQdKP33B-pQwoXKVo",
+
+    authDomain:
+        "ai-travel-planner-10fac.firebaseapp.com",
+
+    projectId:
+        "ai-travel-planner-10fac",
+
+    storageBucket:
+        "ai-travel-planner-10fac.firebasestorage.app",
+
+    messagingSenderId:
+        "173879150977",
+
+    appId:
+        "1:173879150977:web:94960f7f6164d836154080",
+
+    measurementId:
+        "G-7HCFVRL0Q6"
+};
+
+
+/* INITIALIZE FIREBASE */
+
+const app =
+    initializeApp(firebaseConfig);
+
+
+/* INITIALIZE AUTH */
+
+const auth =
+    getAuth(app);
+
+
+/* REGISTER FORM */
+
+document
+.getElementById("registerForm")
+.addEventListener("submit", async function(event) {
+
+    event.preventDefault();
+
+
+    const name =
+        document
+        .getElementById("name")
+        .value
+        .trim();
+
+
+    const email =
+        document
+        .getElementById("email")
+        .value
+        .trim();
+
+
+    const password =
+        document
+        .getElementById("password")
+        .value;
+
+
+    const confirmPassword =
+        document
+        .getElementById("confirmPassword")
+        .value;
+
+
+    const message =
+        document
+        .getElementById("message");
+
+
+    /* PASSWORD CHECK */
+
+    if (password !== confirmPassword) {
+
+        message.textContent =
+            "⚠️ Passwords do not match.";
+
+        message.style.color = "red";
+
+        return;
+    }
+
+
+    if (password.length < 6) {
+
+        message.textContent =
+            "⚠️ Password must be at least 6 characters.";
+
+        message.style.color = "red";
+
+        return;
+    }
+
+
+    /* SHOW LOADING */
+
+    message.textContent =
+        "⏳ Creating your account...";
+
+    message.style.color = "#2563eb";
+
+
+    try {
+
+        /* CREATE FIREBASE ACCOUNT */
+
+        const userCredential =
+            await createUserWithEmailAndPassword(
+                auth,
+                email,
+                password
+            );
+
+
+        const user =
+            userCredential.user;
+
+
+        /* SAVE USER NAME */
+
+        await updateProfile(user, {
+
+            displayName: name
+
+        });
+
+
+        /* SAVE BASIC USER INFO FOR DASHBOARD */
+
+        localStorage.setItem(
+            "travelUser",
+            JSON.stringify({
+
+                name: name,
+
+                email: user.email,
+
+                uid: user.uid
+
+            })
+        );
+
+
+        /* SUCCESS */
+
+        message.textContent =
+            "✅ Account created successfully!";
+
+        message.style.color = "green";
+
+
+        /* REDIRECT */
+
+        setTimeout(function() {
+
+            window.location.href =
+                "dashboard.html";
+
+        }, 1000);
+
+
+    } catch (error) {
+
+
+        /* FIREBASE ERROR */
+
+        if (
+            error.code ===
+            "auth/email-already-in-use"
+        ) {
+
+            message.textContent =
+                "⚠️ This email is already registered.";
+
+        }
+
+        else if (
+            error.code ===
+            "auth/invalid-email"
+        ) {
+
+            message.textContent =
+                "⚠️ Please enter a valid email address.";
+
+        }
+
+        else if (
+            error.code ===
+            "auth/weak-password"
+        ) {
+
+            message.textContent =
+                "⚠️ Password is too weak.";
+
+        }
+
+        else {
+
+            message.textContent =
+                "❌ Registration failed. Please try again.";
+
+        }
+
+
+        message.style.color = "red";
+
+        console.log(error);
+
+    }
+
+});
+
+</script>
+
+
+</body>
+</html>
