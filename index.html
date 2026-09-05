@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Travel Planner</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            color: #172033;
+            background: #f7f9ff;
+            overflow-x: hidden;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            padding: 17px 7%;
+
+            background: rgba(255,255,255,0.82);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+
+            border-bottom: 1px solid rgba(37,99,235,0.08);
+
+            box-shadow: 0 8px 30px rgba(30,64,175,0.08);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+
+            font-size: 23px;
+            font-weight: 800;
+
+            color: #2563eb;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 12px;
+
+            background: linear-gradient(135deg,#2563eb,#7c3aed);
+
+            color: white;
+            font-size: 21px;
+
+            box-shadow: 0 8px 20px rgba(37,99,235,0.25);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #334155;
+
+            padding: 10px 17px;
+            border-radius: 10px;
+
+            font-weight: 700;
+            transition: 0.25s;
+        }
+
+        .nav-links a:hover {
+            color: #2563eb;
+            background: #eff6ff;
+            transform: translateY(-2px);
+        }
+
+        /* ================= HERO ================= */
+
+        .hero {
+            min-height: 680px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 60px;
+
+            padding: 85px 7%;
+
+            position: relative;
+            overflow: hidden;
+
+            background:
+                radial-gradient(circle at 10% 20%, rgba(96,165,250,0.18), transparent 30%),
+                radial-gradient(circle at 90% 20%, rgba(139,92,246,0.16), transparent 30%),
+                linear-gradient(135deg,#f5f9ff,#ffffff,#f2fbff);
+        }
+
+        .hero::before {
+            content: "";
+
+            position: absolute;
+
+            width: 300px;
+            height: 300px;
+
+            border-radius: 50%;
+
+            background: rgba(59,130,246,0.08);
+
+            top: -100px;
+            right: 25%;
+        }
+
+        .hero-content {
+            max-width: 650px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            padding: 10px 17px;
+
+            border-radius: 50px;
+
+            background: rgba(219,234,254,0.8);
+            border: 1px solid #bfdbfe;
+
+            color: #1d4ed8;
+
+            font-size: 14px;
+            font-weight: 800;
+
+            margin-bottom: 24px;
+
+            box-shadow: 0 8px 25px rgba(37,99,235,0.08);
+        }
+
+        .hero h1 {
+            font-size: clamp(44px,6vw,72px);
+            line-height: 1.04;
+
+            letter-spacing: -2px;
+
+            margin-bottom: 25px;
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg,#2563eb,#7c3aed,#06b6d4);
+
+            -webkit-background-clip: text;
+            background-clip: text;
+
+            color: transparent;
+        }
+
+        .hero p {
+            font-size: 18px;
+            line-height: 1.8;
+
+            color: #64748b;
+
+            max-width: 600px;
+
+            margin-bottom: 32px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .primary-btn,
+        .outline-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+
+            text-decoration: none;
+
+            padding: 15px 24px;
+
+            border-radius: 13px;
+
+            font-weight: 800;
+
+            transition: 0.25s;
+        }
+
+        .primary-btn {
+            color: white;
+
+            background: linear-gradient(135deg,#2563eb,#4f46e5);
+
+            box-shadow: 0 12px 28px rgba(37,99,235,0.25);
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 35px rgba(37,99,235,0.32);
+        }
+
+        .outline-btn {
+            color: #2563eb;
+
+            background: rgba(255,255,255,0.8);
+
+            border: 1px solid #bfdbfe;
+        }
+
+        .outline-btn:hover {
+            background: #eff6ff;
+            transform: translateY(-3px);
+        }
+
+        /* ================= HERO CARD ================= */
+
+        .hero-visual {
+            width: 430px;
+            min-width: 320px;
+
+            position: relative;
+            z-index: 2;
+        }
+
+        .travel-card {
+            position: relative;
+
+            padding: 30px;
+
+            border-radius: 30px;
+
+            background: rgba(255,255,255,0.72);
+
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+
+            border: 1px solid rgba(255,255,255,0.9);
+
+            box-shadow:
+                0 30px 70px rgba(37,99,235,0.16),
+                inset 0 1px 0 rgba(255,255,255,0.9);
+
+            transform: rotate(2deg);
+
+            animation: floating 4s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0%,100% {
+                transform: rotate(2deg) translateY(0);
+            }
+
+            50% {
+                transform: rotate(2deg) translateY(-10px);
+            }
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 25px;
+        }
+
+        .travel-icon {
+            width: 75px;
+            height: 75px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 22px;
+
+            font-size: 40px;
+
+            background: linear-gradient(135deg,#dbeafe,#ede9fe);
+
+            box-shadow: 0 12px 25px rgba(37,99,235,0.12);
+        }
+
+        .live-badge {
+            padding: 7px 11px;
+
+            border-radius: 30px;
+
+            background: #ecfdf5;
+            color: #059669;
+
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .travel-card h3 {
+            font-size: 25px;
+            margin-bottom: 9px;
+        }
+
+        .travel-card > p {
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 23px;
+        }
+
+        .mini-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .mini-box {
+            padding: 17px;
+
+            border-radius: 16px;
+
+            background: rgba(248,250,252,0.9);
+
+            border: 1px solid #e2e8f0;
+
+            transition: 0.25s;
+        }
+
+        .mini-box:hover {
+            transform: translateY(-4px);
+            border-color: #bfdbfe;
+            box-shadow: 0 10px 20px rgba(37,99,235,0.08);
+        }
+
+        .mini-box strong {
+            display: block;
+
+            color: #2563eb;
+
+            margin-bottom: 6px;
+        }
+
+        .mini-box span {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        /* ================= STATS ================= */
+
+        .stats {
+            margin: -35px auto 0;
+
+            width: 86%;
+
+            position: relative;
+            z-index: 5;
+
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
+
+            background: white;
+
+            border-radius: 22px;
+
+            box-shadow: 0 18px 50px rgba(15,23,42,0.09);
+
+            border: 1px solid #edf2f7;
+
+            overflow: hidden;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 25px 15px;
+
+            border-right: 1px solid #edf2f7;
+        }
+
+        .stat:last-child {
+            border-right: none;
+        }
+
+        .stat strong {
+            display: block;
+
+            font-size: 25px;
+
+            color: #2563eb;
+
+            margin-bottom: 5px;
+        }
+
+        .stat span {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        /* ================= SECTION ================= */
+
+        .section {
+            padding: 100px 7%;
+        }
+
+        .section-title {
+            text-align: center;
+
+            max-width: 720px;
+
+            margin: 0 auto 50px;
+        }
+
+        .section-label {
+            color: #2563eb;
+
+            font-size: 13px;
+            font-weight: 800;
+
+            text-transform: uppercase;
+
+            letter-spacing: 2px;
+
+            margin-bottom: 12px;
+        }
+
+        .section-title h2 {
+            font-size: 40px;
+            letter-spacing: -1px;
+
+            margin-bottom: 13px;
+        }
+
+        .section-title p {
+            color: #64748b;
+            line-height: 1.7;
+        }
+
+        /* ================= FEATURES ================= */
+
+        .features-grid {
+            display: grid;
+
+            grid-template-columns: repeat(3,1fr);
+
+            gap: 22px;
+        }
+
+        .feature-card {
+            position: relative;
+
+            padding: 30px;
+
+            border-radius: 22px;
+
+            background: rgba(255,255,255,0.9);
+
+            border: 1px solid #e8edf5;
+
+            box-shadow: 0 10px 30px rgba(15,23,42,0.05);
+
+            cursor: pointer;
+
+            overflow: hidden;
+
+            transition: 0.3s;
+        }
+
+        .feature-card::before {
+            content: "";
+
+            position: absolute;
+
+            width: 100px;
+            height: 100px;
+
+            border-radius: 50%;
+
+            background: #eff6ff;
+
+            right: -35px;
+            top: -35px;
+
+            transition: 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-9px);
+
+            border-color: #bfdbfe;
+
+            box-shadow: 0 20px 45px rgba(37,99,235,0.13);
+        }
+
+        .feature-card:hover::before {
+            transform: scale(1.5);
+        }
+
+        .feature-icon {
+            position: relative;
+            z-index: 2;
+
+            width: 60px;
+            height: 60px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 17px;
+
+            background: linear-gradient(135deg,#eff6ff,#eef2ff);
+
+            font-size: 28px;
+
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 21px;
+            margin-bottom: 11px;
+        }
+
+        .feature-card p {
+            color: #64748b;
+            line-height: 1.65;
+            font-size: 15px;
+        }
+
+        /* ================= HOW IT WORKS ================= */
+
+        .how-section {
+            background:
+                linear-gradient(135deg,#f8fbff,#eef6ff);
+        }
+
+        .steps {
+            display: grid;
+
+            grid-template-columns: repeat(4,1fr);
+
+            gap: 20px;
+        }
+
+        .step {
+            text-align: center;
+
+            padding: 30px 22px;
+
+            background: white;
+
+            border-radius: 22px;
+
+            border: 1px solid #e8edf5;
+
+            box-shadow: 0 10px 30px rgba(15,23,42,0.05);
+
+            cursor: pointer;
+
+            transition: 0.3s;
+        }
+
+        .step:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 18px 35px rgba(37,99,235,0.12);
+        }
+
+        .step-number {
+            width: 55px;
+            height: 55px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            margin: 0 auto 18px;
+
+            border-radius: 50%;
+
+            background: linear-gradient(135deg,#2563eb,#7c3aed);
+
+            color: white;
+
+            font-size: 20px;
+            font-weight: 800;
+
+            box-shadow: 0 10px 22px rgba(37,99,235,0.2);
+        }
+
+        .step h3 {
+            margin-bottom: 9px;
+        }
+
+        .step p {
+            color: #64748b;
+
+            font-size: 14px;
+
+            line-height: 1.6;
+        }
+
+        /* ================= CTA ================= */
+
+        .cta {
+            position: relative;
+
+            margin: 20px 7% 80px;
+
+            padding: 65px 30px;
+
+            text-align: center;
+
+            border-radius: 30px;
+
+            overflow: hidden;
+
+            color: white;
+
+            background:
+                radial-gradient(circle at 10% 20%,rgba(255,255,255,0.18),transparent 25%),
+                radial-gradient(circle at 90% 80%,rgba(255,255,255,0.16),transparent 25%),
+                linear-gradient(135deg,#2563eb,#4f46e5,#7c3aed);
+
+            box-shadow: 0 25px 55px rgba(79,70,229,0.25);
+        }
+
+        .cta h2 {
+            font-size: 37px;
+            margin-bottom: 14px;
+        }
+
+        .cta p {
+            opacity: 0.9;
+            margin-bottom: 27px;
+        }
+
+        .cta a {
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            gap: 8px;
+
+            padding: 15px 27px;
+
+            border-radius: 12px;
+
+            background: white;
+
+            color: #2563eb;
+
+            text-decoration: none;
+
+            font-weight: 800;
+
+            transition: 0.25s;
+        }
+
+        .cta a:hover {
+            transform: translateY(-4px);
+
+            box-shadow: 0 12px 25px rgba(0,0,0,0.18);
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            padding: 50px 7% 25px;
+
+            text-align: center;
+
+            background: #0f172a;
+
+            color: white;
+        }
+
+        footer h3 {
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+
+        footer p {
+            color: #cbd5e1;
+            margin: 8px 0;
+            line-height: 1.5;
+        }
+
+        .copyright {
+            margin-top: 28px;
+
+            padding-top: 20px;
+
+            border-top: 1px solid #334155;
+
+            color: #94a3b8;
+
+            font-size: 13px;
+        }
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 1000px) {
+
+            .hero {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero-content {
+                max-width: 750px;
+            }
+
+            .hero p {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .hero-visual {
+                max-width: 440px;
+                width: 100%;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .steps {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 700px) {
+
+            .navbar {
+                padding: 14px 5%;
+            }
+
+            .logo {
+                font-size: 17px;
+            }
+
+            .logo-icon {
+                width: 35px;
+                height: 35px;
+                font-size: 18px;
+            }
+
+            .nav-links {
+                gap: 2px;
+            }
+
+            .nav-links a {
+                padding: 8px 7px;
+                font-size: 12px;
+            }
+
+            .hero {
+                padding: 65px 5% 80px;
+            }
+
+            .hero h1 {
+                font-size: 42px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .travel-card {
+                padding: 23px;
+            }
+
+            .stats {
+                width: 90%;
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .stat {
+                border-right: 1px solid #edf2f7;
+                border-bottom: 1px solid #edf2f7;
+            }
+
+            .stat:nth-child(2) {
+                border-right: none;
+            }
+
+            .stat:nth-child(3),
+            .stat:nth-child(4) {
+                border-bottom: none;
+            }
+
+            .section {
+                padding: 70px 5%;
+            }
+
+            .section-title h2 {
+                font-size: 31px;
+            }
+
+            .features-grid,
+            .steps {
+                grid-template-columns: 1fr;
+            }
+
+            .cta {
+                margin-left: 5%;
+                margin-right: 5%;
+                margin-bottom: 55px;
+                padding: 50px 22px;
+            }
+
+            .cta h2 {
+                font-size: 29px;
+            }
+        }
+
+        @media (max-width: 430px) {
+
+            .nav-links a {
+                font-size: 11px;
+                padding: 7px 5px;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .mini-info {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        <div class="logo-icon">✈️</div>
+        AI Travel Planner
+    </div>
+
+    <ul class="nav-links">
+
+        <li>
+            <a href="index.html">Home</a>
+        </li>
+
+        <li>
+            <a href="login.html">Login</a>
+        </li>
+
+        <li>
+            <a href="register.html">Register</a>
+        </li>
+
+    </ul>
+
+</nav>
+
+
+<!-- ================= HERO ================= -->
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <div class="badge">
+            🤖 AI Powered Travel Planning
+        </div>
+
+        <h1>
+            Plan Your Perfect
+            <span class="gradient-text">Journey</span>
+        </h1>
+
+        <p>
+            Create personalized travel plans with AI.
+            Discover destinations, manage your budget,
+            explore hotels, create itineraries and keep
+            your complete trip plan in one place.
+        </p>
+
+        <div class="hero-buttons">
+
+            <a href="planner.html" class="primary-btn">
+                ✨ Start Planning →
+            </a>
+
+            <a href="login.html" class="outline-btn">
+                🔐 Login
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="hero-visual">
+
+        <div class="travel-card">
+
+            <div class="card-top">
+
+                <div class="travel-icon">
+                    🌍
+                </div>
+
+                <div class="live-badge">
+                    ● SMART PLANNER
+                </div>
+
+            </div>
+
+            <h3>
+                Your Smart Travel Assistant
+            </h3>
+
+            <p>
+                Plan smarter. Travel better.
+                Your complete journey starts here.
+            </p>
+
+            <div class="mini-info">
+
+                <div class="mini-box">
+                    <strong>🗺️ Plan</strong>
+                    <span>Smart itinerary</span>
+                </div>
+
+                <div class="mini-box">
+                    <strong>💰 Budget</strong>
+                    <span>Expense planning</span>
+                </div>
+
+                <div class="mini-box">
+                    <strong>🏨 Stay</strong>
+                    <span>Hotel suggestions</span>
+                </div>
+
+                <div class="mini-box">
+                    <strong>🎫 Ticket</strong>
+                    <span>Digital ticket</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= STATS ================= -->
+
+<div class="stats">
+
+    <div class="stat">
+        <strong>🤖 AI</strong>
+        <span>Smart Planning</span>
+    </div>
+
+    <div class="stat">
+        <strong>🗺️ 24/7</strong>
+        <span>Trip Assistance</span>
+    </div>
+
+    <div class="stat">
+        <strong>💰 Smart</strong>
+        <span>Budget Planning</span>
+    </div>
+
+    <div class="stat">
+        <strong>✈️ Easy</strong>
+        <span>Travel Management</span>
+    </div>
+
+</div>
+
+
+<!-- ================= FEATURES ================= -->
+
+<section class="section">
+
+    <div class="section-title">
+
+        <div class="section-label">
+            Powerful Features
+        </div>
+
+        <h2>
+            Everything You Need for Your Trip
+        </h2>
+
+        <p>
+            AI Travel Planner brings planning,
+            budgeting, itinerary management and
+            travel information together in one place.
+        </p>
+
+    </div>
+
+
+    <div class="features-grid">
+
+        <div class="feature-card"
+             onclick="location.href='planner.html'">
+
+            <div class="feature-icon">
+                🤖
+            </div>
+
+            <h3>
+                AI Travel Planning
+            </h3>
+
+            <p>
+                Enter your destination, dates,
+                travelers and preferences to create
+                your personalized travel plan.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card"
+             onclick="location.href='itinerary.html'">
+
+            <div class="feature-icon">
+                🗓️
+            </div>
+
+            <h3>
+                Smart Itinerary
+            </h3>
+
+            <p>
+                Organize your trip day-by-day with
+                activities, travel planning and
+                budget information.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card"
+             onclick="location.href='planner.html'">
+
+            <div class="feature-icon">
+                💰
+            </div>
+
+            <h3>
+                Smart Budget Planner
+            </h3>
+
+            <p>
+                Manage your estimated travel expenses
+                and understand your daily trip budget.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card"
+             onclick="location.href='hotels.html'">
+
+            <div class="feature-icon">
+                🏨
+            </div>
+
+            <h3>
+                Hotels & Places
+            </h3>
+
+            <p>
+                Explore hotel options and discover
+                popular categories of places to visit.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card"
+             onclick="location.href='ticket.html'">
+
+            <div class="feature-icon">
+                🎫
+            </div>
+
+            <h3>
+                Digital Travel Ticket
+            </h3>
+
+            <p>
+                Keep your booking details and digital
+                travel ticket available in one place.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card"
+             onclick="location.href='my-trips.html'">
+
+            <div class="feature-icon">
+                🧳
+            </div>
+
+            <h3>
+                My Trips
+            </h3>
+
+            <p>
+                Save multiple trips and access your
+                travel plans whenever you need them.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= HOW IT WORKS ================= -->
+
+<section class="section how-section">
+
+    <div class="section-title">
+
+        <div class="section-label">
+            Simple Process
+        </div>
+
+        <h2>
+            How It Works
+        </h2>
+
+        <p>
+            Plan your next journey in just a few simple steps.
+        </p>
+
+    </div>
+
+
+    <div class="steps">
+
+        <div class="step"
+             onclick="location.href='register.html'">
+
+            <div class="step-number">
+                1
+            </div>
+
+            <h3>
+                Create Account
+            </h3>
+
+            <p>
+                Register and start using your
+                AI Travel Planner.
+            </p>
+
+        </div>
+
+
+        <div class="step"
+             onclick="location.href='planner.html'">
+
+            <div class="step-number">
+                2
+            </div>
+
+            <h3>
+                Enter Trip Details
+            </h3>
+
+            <p>
+                Add destination, dates,
+                travelers and budget.
+            </p>
+
+        </div>
+
+
+        <div class="step"
+             onclick="location.href='planner.html'">
+
+            <div class="step-number">
+                3
+            </div>
+
+            <h3>
+                Generate Plan
+            </h3>
+
+            <p>
+                Create your personalized
+                travel plan and itinerary.
+            </p>
+
+        </div>
+
+
+        <div class="step"
+             onclick="location.href='itinerary.html'">
+
+            <div class="step-number">
+                4
+            </div>
+
+            <h3>
+                Enjoy Your Trip
+            </h3>
+
+            <p>
+                Manage your itinerary,
+                hotel and digital ticket.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= CTA ================= -->
+
+<section class="cta">
+
+    <h2>
+        Ready to Plan Your Next Adventure?
+    </h2>
+
+    <p>
+        Let AI help you organize your journey.
+    </p>
+
+    <a href="planner.html">
+        🚀 Plan My Trip
+    </a>
+
+</section>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <h3>
+        ✈️ AI Travel Planner
+    </h3>
+
+    <p>
+        AI-powered personalized travel planning system
+    </p>
+
+    <p>
+        <strong>Project Developer:</strong>
+        Pratiksha Anil Kharat
+    </p>
+
+    <p>
+        Computer Science Engineering —
+        AGCE Polytechnic College, Satara
+    </p>
+
+    <p>
+        Inplant Training — 2026
+    </p>
+
+    <div class="copyright">
+        © 2026 AI Travel Planner · All Rights Reserved
+    </div>
+
+</footer>
+
+</body>
+</html>
