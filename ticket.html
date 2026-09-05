@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Digital Ticket - AI Travel Planner</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        nav {
+            background: #2563eb;
+            color: white;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 12px;
+            font-size: 14px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 35px 20px 20px;
+        }
+
+        .header h1 {
+            color: #2563eb;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #64748b;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 750px;
+            margin: 20px auto 50px;
+        }
+
+        .ticket {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.10);
+        }
+
+        .ticket-header {
+            background: #2563eb;
+            color: white;
+            text-align: center;
+            padding: 25px;
+        }
+
+        .ticket-header h2 {
+            margin-bottom: 8px;
+        }
+
+        .ticket-body {
+            padding: 25px;
+        }
+
+        .booking-id {
+            background: #eff6ff;
+            padding: 16px;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 22px;
+        }
+
+        .booking-id p {
+            margin-bottom: 5px;
+            color: #64748b;
+        }
+
+        .booking-id strong {
+            color: #2563eb;
+            font-size: 20px;
+        }
+
+        .details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .detail-box {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .detail-box strong {
+            display: block;
+            color: #2563eb;
+            margin-bottom: 6px;
+        }
+
+        .ticket-footer {
+            border-top: 2px dashed #cbd5e1;
+            padding: 20px;
+            text-align: center;
+            color: #64748b;
+        }
+
+        .confirmed {
+            color: #16a34a;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+
+        .print-btn,
+        .home-btn {
+            border: none;
+            padding: 14px 24px;
+            border-radius: 9px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .print-btn {
+            background: #2563eb;
+        }
+
+        .home-btn {
+            background: #475569;
+        }
+
+        .empty {
+            background: white;
+            padding: 40px 20px;
+            text-align: center;
+            border-radius: 14px;
+        }
+
+        .empty a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 20px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+        }
+
+        footer {
+            background: #1e293b;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        @media(max-width: 600px) {
+            .details {
+                grid-template-columns: 1fr;
+            }
+
+            nav a {
+                font-size: 12px;
+                margin-left: 6px;
+            }
+        }
+
+        /* PRINT */
+        @media print {
+
+            nav,
+            .header,
+            .actions,
+            footer {
+                display: none !important;
+            }
+
+            body {
+                background: white;
+            }
+
+            .container {
+                width: 100%;
+                max-width: 100%;
+                margin: 0;
+            }
+
+            .ticket {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav>
+
+    <div class="logo">
+        ✈️ AI Travel Planner
+    </div>
+
+    <div>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="planner.html">Plan Trip</a>
+        <a href="itinerary.html">Itinerary</a>
+        <a href="hotels.html">Hotels</a>
+        <a href="booking.html">Booking</a>
+    </div>
+
+</nav>
+
+
+<div class="header">
+
+    <h1>🎟️ Digital Travel Ticket</h1>
+
+    <p>Your booking confirmation</p>
+
+</div>
+
+
+<div class="container">
+
+    <div id="ticketContainer"></div>
+
+</div>
+
+
+<footer>
+
+    <p>AI Travel Planner © 2026</p>
+    <p>Developed as an Academic Project</p>
+
+</footer>
+
+
+<script>
+
+const ticketContainer =
+    document.getElementById("ticketContainer");
+
+const bookingData =
+    localStorage.getItem("travelBooking");
+
+
+if (!bookingData) {
+
+    ticketContainer.innerHTML = `
+
+        <div class="empty">
+
+            <h2>⚠️ No Booking Found</h2>
+
+            <p>
+                Please complete a hotel booking first.
+            </p>
+
+            <a href="hotels.html">
+                🏨 Find Hotels
+            </a>
+
+        </div>
+
+    `;
+
+} else {
+
+    const booking =
+        JSON.parse(bookingData);
+
+    ticketContainer.innerHTML = `
+
+        <div class="ticket">
+
+            <div class="ticket-header">
+
+                <h2>✈️ AI Travel Planner</h2>
+
+                <p>Digital Booking Confirmation</p>
+
+            </div>
+
+
+            <div class="ticket-body">
+
+                <div class="booking-id">
+
+                    <p>Booking ID</p>
+
+                    <strong>
+                        ${booking.bookingId || "AIP000000"}
+                    </strong>
+
+                </div>
+
+
+                <div class="details">
+
+                    <div class="detail-box">
+                        <strong>👤 Passenger Name</strong>
+                        ${booking.fullName || "Not Available"}
+                    </div>
+
+
+                    <div class="detail-box">
+                        <strong>🌍 Destination</strong>
+                        ${booking.destination || "Not Available"}
+                    </div>
+
+
+                    <div class="detail-box">
+                        <strong>🏨 Hotel</strong>
+                        ${booking.hotel || "Not Available"}
+                    </div>
+
+
+                    <div class="detail-box">
+                        <strong>📧 Email</strong>
+                        ${booking.email || "Not Available"}
+                    </div>
+
+
+                    <div class="detail-box">
+                        <strong>📱 Mobile</strong>
+                        ${booking.mobile || "Not Available"}
+                    </div>
+
+
+                    <div class="detail-box">
+                        <strong>📅 Check-in</strong>
+                        ${booking.checkIn || "Not Available"}
+                    </div>
+
+
+                    <div class="detail-box">
+                        <strong>📅 Check-out</strong>
+                        ${booking.checkOut || "Not Available"}
+                    </div>
+
+
+                    <div class="detail-box">
+                        <strong>👥 Guests</strong>
+                        ${booking.guests || "Not Available"}
+                    </div>
+
+
+                    <div class="detail-box">
+                        <strong>🛏️ Rooms</strong>
+                        ${booking.rooms || "Not Available"}
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="ticket-footer">
+
+                <p class="confirmed">
+                    ✅ Booking Confirmed
+                </p>
+
+                <p>
+                    Please keep this digital ticket for your reference.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="actions">
+
+            <button
+                type="button"
+                class="print-btn"
+                onclick="printTicket()"
+            >
+                🖨️ Print Ticket
+            </button>
+
+
+            <a
+                href="dashboard.html"
+                class="home-btn"
+            >
+                🏠 Dashboard
+            </a>
+
+        </div>
+
+    `;
+}
+
+
+function printTicket() {
+
+    const ticket = document.querySelector(".ticket");
+
+    if (!ticket) {
+        alert("Ticket not found.");
+        return;
+    }
+
+    const oldActions = document.querySelector(".actions");
+
+    if (oldActions) {
+        oldActions.style.display = "none";
+    }
+
+    window.print();
+
+    setTimeout(function () {
+        if (oldActions) {
+            oldActions.style.display = "flex";
+        }
+    }, 1000);
+}
+</script>
+
+</body>
+</html>

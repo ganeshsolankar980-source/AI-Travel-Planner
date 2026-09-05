@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login | AI Travel Planner</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <div class="auth-page">
+
+        <div class="auth-card">
+
+            <div class="auth-logo">
+                ✈️
+            </div>
+
+            <h1>Welcome Back!</h1>
+
+            <p class="auth-subtitle">
+                Login to continue your travel journey
+            </p>
+
+
+            <form id="loginForm">
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="Enter your email"
+                        required
+                    >
+                </div>
+
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Enter your password"
+                        required
+                    >
+                </div>
+
+
+                <div class="form-options">
+
+                    <label class="remember">
+                        <input type="checkbox" id="remember">
+                        Remember me
+                    </label>
+
+                    <a href="#" onclick="forgotPassword()">
+                        Forgot Password?
+                    </a>
+
+                </div>
+
+
+                <button type="submit" class="auth-btn">
+                    🔐 Login
+                </button>
+
+            </form>
+
+
+            <div id="loginMessage" class="message"></div>
+
+
+            <div class="auth-divider">
+                <span>OR</span>
+            </div>
+
+
+            <button class="guest-btn" onclick="guestLogin()">
+                👤 Continue as Guest
+            </button>
+
+
+            <p class="auth-switch">
+                Don't have an account?
+
+                <a href="register.html">
+                    Create Account
+                </a>
+            </p>
+
+
+            <a href="index.html" class="back-home">
+                ← Back to Home
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <footer class="simple-footer">
+        <p>
+            © 2026 AI Travel Planner | Smart planning. Better journeys.
+        </p>
+    </footer>
+
+
+    <script src="js/script.js"></script>
+
+    <script>
+
+        const loginForm = document.getElementById("loginForm");
+
+        loginForm.addEventListener("submit", function(event) {
+
+            event.preventDefault();
+
+            const email =
+                document.getElementById("email").value.trim();
+
+            const password =
+                document.getElementById("password").value.trim();
+
+            const message =
+                document.getElementById("loginMessage");
+
+
+            if (email === "" || password === "") {
+
+                message.textContent =
+                    "Please enter email and password.";
+
+                message.className = "message error";
+
+                return;
+            }
+
+
+            /*
+             * Temporary local login.
+             * Later we will connect this page
+             * with Firebase Authentication.
+             */
+
+            localStorage.setItem("travelUser", email);
+
+            message.textContent =
+                "Login successful! Opening dashboard...";
+
+            message.className = "message success";
+
+
+            setTimeout(function() {
+
+                window.location.href =
+                    "dashboard.html";
+
+            }, 1000);
+
+        });
+
+
+        function guestLogin() {
+
+            localStorage.setItem(
+                "travelGuest",
+                "true"
+            );
+
+            window.location.href =
+                "dashboard.html";
+        }
+
+
+        function forgotPassword() {
+
+            alert(
+                "Password recovery will be connected with Firebase Authentication."
+            );
+
+        }
+
+    </script>
+
+</body>
+</html>

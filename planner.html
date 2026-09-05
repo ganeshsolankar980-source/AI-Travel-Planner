@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Travel Planner</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+<style>
+body {
+    background:#f5f7fb;
+}
+
+.planner-container {
+    max-width:800px;
+    margin:40px auto;
+    padding:25px;
+}
+
+.planner-card {
+    background:white;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.08);
+}
+
+.planner-card h1 {
+    text-align:center;
+    margin-bottom:10px;
+}
+
+.planner-card .subtitle {
+    text-align:center;
+    color:#666;
+    margin-bottom:25px;
+}
+
+.form-group {
+    margin-bottom:18px;
+}
+
+.form-group label {
+    display:block;
+    font-weight:bold;
+    margin-bottom:7px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width:100%;
+    padding:12px;
+    border:1px solid #ddd;
+    border-radius:8px;
+    box-sizing:border-box;
+    font-size:15px;
+}
+
+.form-group textarea {
+    min-height:100px;
+    resize:vertical;
+}
+
+.generate-btn {
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:10px;
+    background:#2563eb;
+    color:white;
+    font-size:17px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.generate-btn:hover {
+    background:#1d4ed8;
+}
+
+/* VOICE ASSISTANT */
+
+.voice-box {
+    margin-top:12px;
+    margin-bottom:20px;
+    padding:18px;
+    background:#f0f6ff;
+    border-radius:10px;
+    text-align:center;
+    border:1px solid #dbeafe;
+}
+
+.voice-box h3 {
+    margin:0;
+}
+
+.voice-box p {
+    color:#666;
+}
+
+.voice-btn {
+    padding:11px 20px;
+    border:none;
+    border-radius:8px;
+    background:#2563eb;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+    font-size:15px;
+}
+
+.voice-btn:hover {
+    background:#1d4ed8;
+}
+
+#voiceStatus {
+    margin-bottom:0;
+    font-weight:bold;
+}
+
+.message {
+    text-align:center;
+    margin-top:15px;
+    font-weight:bold;
+}
+
+footer {
+    margin-top:50px;
+    text-align:center;
+    padding:25px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        ✈️ AI Travel Planner
+    </div>
+
+    <div class="nav-links">
+
+        <a href="dashboard.html">Dashboard</a>
+        <a href="planner.html">Plan Trip</a>
+        <a href="itinerary.html">Itinerary</a>
+        <a href="hotels.html">Hotels</a>
+        <a href="booking.html">Booking</a>
+        <a href="my-trips.html">My Trips</a>
+
+    </div>
+
+</nav>
+
+
+<!-- PLANNER -->
+
+<div class="planner-container">
+
+    <div class="planner-card">
+
+        <h1>🤖 AI Travel Planner</h1>
+
+        <p class="subtitle">
+            Enter your travel details and create your personalized trip plan.
+        </p>
+
+
+        <form id="tripForm">
+
+
+            <!-- DESTINATION -->
+
+            <div class="form-group">
+
+                <label>📍 Destination</label>
+
+                <input
+                    type="text"
+                    id="destination"
+                    placeholder="Example: Goa"
+                    required>
+
+            </div>
+
+
+            <!-- START DATE -->
+
+            <div class="form-group">
+
+                <label>📅 Start Date</label>
+
+                <input
+                    type="text"
+                    id="startDate"
+                    placeholder="DD/MM/YYYY"
+                    required>
+
+            </div>
+
+
+            <!-- END DATE -->
+
+            <div class="form-group">
+
+                <label>📅 End Date</label>
+
+                <input
+                    type="text"
+                    id="endDate"
+                    placeholder="DD/MM/YYYY"
+                    required>
+
+            </div>
+
+
+            <!-- TRAVELERS -->
+
+            <div class="form-group">
+
+                <label>👥 Number of Travelers</label>
+
+                <input
+                    type="number"
+                    id="travelers"
+                    min="1"
+                    value="1"
+                    required>
+
+            </div>
+
+
+            <!-- BUDGET -->
+
+            <div class="form-group">
+
+                <label>💰 Total Budget (₹)</label>
+
+                <input
+                    type="number"
+                    id="budget"
+                    min="1"
+                    placeholder="Example: 25000"
+                    required>
+
+            </div>
+
+
+            <!-- TRAVEL STYLE -->
+
+            <div class="form-group">
+
+                <label>🌴 Travel Style</label>
+
+                <select id="travelStyle">
+
+                    <option value="Adventure">
+                        Adventure
+                    </option>
+
+                    <option value="Relaxation">
+                        Relaxation
+                    </option>
+
+                    <option value="Family">
+                        Family
+                    </option>
+
+                    <option value="Couple">
+                        Couple
+                    </option>
+
+                    <option value="Budget">
+                        Budget
+                    </option>
+
+                    <option value="Luxury">
+                        Luxury
+                    </option>
+
+                    <option value="Cultural">
+                        Cultural
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- PREFERENCES -->
+
+            <div class="form-group">
+
+                <label>📝 Preferences</label>
+
+                <textarea
+                    id="preferences"
+                    placeholder="Example: Beaches, temples, local food, shopping..."></textarea>
+
+            </div>
+
+
+            <!-- VOICE AI ASSISTANT -->
+
+            <div class="voice-box">
+
+                <h3>🎙️ Voice AI Assistant</h3>
+
+                <p>
+                    Speak your travel preferences
+                </p>
+
+                <button
+                    type="button"
+                    class="voice-btn"
+                    onclick="startVoiceAssistant()">
+
+                    🎤 Start Speaking
+
+                </button>
+
+                <p id="voiceStatus"></p>
+
+            </div>
+
+
+            <!-- GENERATE BUTTON -->
+
+            <button
+                type="submit"
+                class="generate-btn">
+
+                ✨ Generate AI Trip Plan
+
+            </button>
+
+
+        </form>
+
+
+        <div
+            id="message"
+            class="message">
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    <p>
+        <strong>Project Developer:</strong>
+        Pratiksha Anil Kharat
+    </p>
+
+    <p>
+        <strong>Branch:</strong>
+        Computer Science Engineering
+    </p>
+
+    <p>
+        <strong>College:</strong>
+        AGCE Polytechnic College, Satara
+    </p>
+
+    <p>
+        <strong>Inplant Training:</strong>
+        2026
+    </p>
+
+    <p>
+        © 2026 AI Travel Planner
+    </p>
+
+</footer>
+
+
+<script>
+
+/* =========================================
+   VOICE AI ASSISTANT
+========================================= */
+
+function startVoiceAssistant() {
+
+    const status =
+        document.getElementById("voiceStatus");
+
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+
+    if (!SpeechRecognition) {
+
+        status.innerText =
+            "❌ Voice recognition is not supported in this browser.";
+
+        return;
+    }
+
+
+    const recognition =
+        new SpeechRecognition();
+
+
+    recognition.lang = "en-IN";
+
+    recognition.continuous = false;
+
+    recognition.interimResults = false;
+
+
+    status.innerText =
+        "🎙️ Listening... Speak now";
+
+
+    recognition.start();
+
+
+    recognition.onresult = function(event) {
+
+        const text =
+            event.results[0][0].transcript;
+
+
+        document.getElementById("preferences").value =
+            text;
+
+
+        status.innerText =
+            "✅ Voice input added!";
+
+    };
+
+
+    recognition.onerror = function(event) {
+
+        status.innerText =
+            "❌ Could not understand. Please try again.";
+
+    };
+
+
+    recognition.onend = function() {
+
+        if (
+            status.innerText.includes("Listening")
+        ) {
+
+            status.innerText =
+                "🎤 Voice input stopped.";
+
+        }
+
+    };
+
+}
+
+
+/* =========================================
+   TRIP FORM
+========================================= */
+
+document
+.getElementById("tripForm")
+.addEventListener("submit", function(event) {
+
+    event.preventDefault();
+
+
+    const destination =
+        document
+        .getElementById("destination")
+        .value
+        .trim();
+
+
+    const startDate =
+        document
+        .getElementById("startDate")
+        .value
+        .trim();
+
+
+    const endDate =
+        document
+        .getElementById("endDate")
+        .value
+        .trim();
+
+
+    const travelers =
+        Number(
+            document
+            .getElementById("travelers")
+            .value
+        );
+
+
+    const budget =
+        Number(
+            document
+            .getElementById("budget")
+            .value
+        );
+
+
+    const travelStyle =
+        document
+        .getElementById("travelStyle")
+        .value;
+
+
+    const preferences =
+        document
+        .getElementById("preferences")
+        .value
+        .trim();
+
+
+    /* DATE VALIDATION */
+
+    const datePattern =
+        /^\d{2}\/\d{2}\/\d{4}$/;
+
+
+    if (
+        !datePattern.test(startDate) ||
+        !datePattern.test(endDate)
+    ) {
+
+        alert(
+            "⚠️ Please enter dates in DD/MM/YYYY format."
+        );
+
+        return;
+    }
+
+
+    const s =
+        startDate.split("/");
+
+
+    const e =
+        endDate.split("/");
+
+
+    const start =
+        new Date(
+            Number(s[2]),
+            Number(s[1]) - 1,
+            Number(s[0])
+        );
+
+
+    const end =
+        new Date(
+            Number(e[2]),
+            Number(e[1]) - 1,
+            Number(e[0])
+        );
+
+
+    /* CHECK DATE */
+
+    if (end <= start) {
+
+        alert(
+            "⚠️ End Date must be after Start Date."
+        );
+
+        return;
+    }
+
+
+    /* CALCULATE DAYS */
+
+    const days =
+        Math.max(
+            1,
+            Math.round(
+                (end - start) /
+                (1000 * 60 * 60 * 24)
+            )
+        );
+
+
+    /* CREATE TRIP */
+
+    const trip = {
+
+        id: Date.now(),
+
+        destination: destination,
+
+        startDate: startDate,
+
+        endDate: endDate,
+
+        travelers: travelers,
+
+        budget: budget,
+
+        travelStyle: travelStyle,
+
+        preferences: preferences,
+
+        days: days,
+
+        createdAt:
+            new Date().toLocaleString()
+
+    };
+
+
+    /* GET OLD TRIPS */
+
+    let trips =
+        JSON.parse(
+            localStorage.getItem(
+                "aiTravelTrips"
+            )
+        ) || [];
+
+
+    /* ADD NEW TRIP */
+
+    trips.push(trip);
+
+
+    /* SAVE ALL TRIPS */
+
+    localStorage.setItem(
+        "aiTravelTrips",
+        JSON.stringify(trips)
+    );
+
+
+    /* KEEP LATEST TRIP */
+
+    localStorage.setItem(
+        "aiTravelTrip",
+        JSON.stringify(trip)
+    );
+
+
+    /* SUCCESS MESSAGE */
+
+    document
+    .getElementById("message")
+    .innerHTML =
+        "✅ Trip created successfully!";
+
+
+    /* GO TO MY TRIPS */
+
+    setTimeout(function() {
+
+        window.location.href =
+            "my-trips.html";
+
+    }, 700);
+
+});
+
+</script>
+
+</body>
+</html>

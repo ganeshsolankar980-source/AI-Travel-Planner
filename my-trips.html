@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Travel Planner - My Trips</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #222;
+        }
+
+        nav {
+            background: #2563eb;
+            padding: 15px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .logo {
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 18px;
+        }
+
+        .header {
+            background: white;
+            text-align: center;
+            padding: 35px 20px;
+        }
+
+        .header h1 {
+            color: #2563eb;
+            margin-bottom: 10px;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1000px;
+            margin: 30px auto;
+        }
+
+        .trip-card {
+            background: white;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .trip-card h2 {
+            color: #2563eb;
+            margin-bottom: 15px;
+        }
+
+        .trip-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .info-box {
+            background: #f1f5ff;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .info-box strong {
+            display: block;
+            color: #2563eb;
+            margin-bottom: 5px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            border: none;
+            padding: 12px 18px;
+            border-radius: 8px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #1d4ed8;
+        }
+
+        .delete-btn {
+            background: #dc2626;
+        }
+
+        .delete-btn:hover {
+            background: #b91c1c;
+        }
+
+        .empty {
+            background: white;
+            padding: 45px 20px;
+            text-align: center;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .empty h2 {
+            margin-bottom: 12px;
+        }
+
+        .empty p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        footer {
+            margin-top: 50px;
+            background: #172033;
+            color: white;
+            text-align: center;
+            padding: 25px;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 700px) {
+
+            nav {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            nav a {
+                margin: 5px;
+            }
+
+            .trip-info {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav>
+
+    <div class="logo">
+        ✈️ AI Travel Planner
+    </div>
+
+    <div>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="planner.html">Plan Trip</a>
+        <a href="itinerary.html">Itinerary</a>
+        <a href="hotels.html">Hotels</a>
+        <a href="booking.html">Booking</a>
+    </div>
+
+</nav>
+
+
+<div class="header">
+
+    <h1>📋 My Trips</h1>
+
+    <p>Manage your saved travel plans</p>
+
+</div>
+
+
+<div class="container">
+
+    <div id="tripsContainer"></div>
+
+</div>
+
+
+<footer>
+
+    <p>
+        <strong>Project Developer:</strong>
+        Pratiksha Anil Kharat
+    </p>
+
+    <p>
+        <strong>Branch:</strong>
+        Computer Science Engineering
+    </p>
+
+    <p>
+        <strong>College:</strong>
+        AGCE Polytechnic College, Satara
+    </p>
+
+    <p>
+        <strong>Inplant Training:</strong>
+        2026
+    </p>
+
+    <p>
+        © 2026 AI Travel Planner
+    </p>
+
+</footer>
+
+
+<script>
+
+function loadTrip() {
+
+    const container =
+        document.getElementById("tripsContainer");
+
+    const trip =
+        JSON.parse(localStorage.getItem("aiTravelTrip"));
+
+
+    if (!trip) {
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                <h2>✈️ No Trips Found</h2>
+
+                <p>
+                    You haven't created any travel plan yet.
+                </p>
+
+                <a href="planner.html" class="btn">
+                    ➕ Create New Trip
+                </a>
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    container.innerHTML = `
+
+        <div class="trip-card">
+
+            <h2>
+                🌍 ${trip.destination || "My Trip"}
+            </h2>
+
+            <div class="trip-info">
+
+                <div class="info-box">
+
+                    <strong>📍 Destination</strong>
+
+                    ${trip.destination || "N/A"}
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <strong>📅 Start Date</strong>
+
+                    ${trip.startDate || "N/A"}
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <strong>📅 End Date</strong>
+
+                    ${trip.endDate || "N/A"}
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <strong>👥 Travelers</strong>
+
+                    ${trip.travelers || "N/A"}
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <strong>💰 Budget</strong>
+
+                    ₹${trip.budget || "N/A"}
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <strong>🎒 Travel Style</strong>
+
+                    ${trip.travelStyle || "N/A"}
+
+                </div>
+
+            </div>
+
+
+            <div class="buttons">
+
+                <a href="itinerary.html" class="btn">
+                    🗺️ View Itinerary
+                </a>
+
+                <a href="hotels.html" class="btn">
+                    🏨 Find Hotels
+                </a>
+
+                <button
+                    class="btn delete-btn"
+                    onclick="deleteTrip()">
+                    🗑️ Delete Trip
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+}
+
+
+
+function deleteTrip() {
+
+    const confirmDelete =
+        confirm("Are you sure you want to delete this trip?");
+
+
+    if (!confirmDelete) {
+        return;
+    }
+
+
+    localStorage.removeItem("aiTravelTrip");
+
+
+    alert("✅ Trip deleted successfully!");
+
+
+    loadTrip();
+
+}
+
+
+loadTrip();
+
+</script>
+
+</body>
+</html>
