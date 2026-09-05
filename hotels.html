@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Hotels & Places - AI Travel Planner</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+<style>
+
+/* ================================
+   PAGE
+================================ */
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7fb;
+    color: #1e293b;
+}
+
+
+/* ================================
+   NAVBAR
+================================ */
+
+.navbar {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    padding: 18px 6%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+}
+
+.logo {
+    color: white;
+    font-size: 21px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.nav-links {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.nav-links a:hover {
+    background: rgba(255,255,255,0.18);
+}
+
+
+/* ================================
+   MAIN CONTAINER
+================================ */
+
+.container {
+    max-width: 1150px;
+    margin: 0 auto;
+    padding: 45px 20px;
+}
+
+
+/* ================================
+   HERO
+================================ */
+
+.page-header {
+    text-align: center;
+    background: linear-gradient(135deg, #dbeafe, #eff6ff);
+    border-radius: 22px;
+    padding: 45px 20px;
+    margin-bottom: 40px;
+    box-shadow: 0 8px 25px rgba(37,99,235,0.08);
+}
+
+.hero-icon {
+    font-size: 55px;
+    margin-bottom: 10px;
+}
+
+.page-header h1 {
+    margin: 0 0 12px;
+    font-size: 36px;
+    color: #0f172a;
+}
+
+.page-header p {
+    font-size: 17px;
+    color: #64748b;
+    margin: 0;
+}
+
+.destination-name {
+    color: #2563eb;
+    font-weight: bold;
+}
+
+
+/* ================================
+   SECTION TITLE
+================================ */
+
+.section-heading {
+    margin: 40px 0 20px;
+}
+
+.section-heading h2 {
+    margin: 0;
+    font-size: 27px;
+    color: #0f172a;
+}
+
+.section-heading p {
+    color: #64748b;
+    margin-top: 7px;
+}
+
+
+/* ================================
+   HOTEL GRID
+================================ */
+
+.hotel-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+
+/* ================================
+   HOTEL CARD
+================================ */
+
+.hotel-card {
+    background: white;
+    border-radius: 18px;
+    padding: 25px;
+    box-shadow: 0 7px 25px rgba(15,23,42,0.08);
+    border: 1px solid #e5e7eb;
+    transition: 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.hotel-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 30px rgba(15,23,42,0.13);
+}
+
+.hotel-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.hotel-icon {
+    width: 58px;
+    height: 58px;
+    border-radius: 15px;
+    background: #dbeafe;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+}
+
+.hotel-rating {
+    background: #fef3c7;
+    color: #92400e;
+    padding: 7px 10px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.hotel-card h2 {
+    margin: 8px 0;
+    color: #1d4ed8;
+    font-size: 21px;
+}
+
+.hotel-description {
+    color: #64748b;
+    line-height: 1.6;
+    min-height: 52px;
+}
+
+.hotel-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 18px 0;
+}
+
+.feature {
+    background: #f1f5f9;
+    padding: 6px 9px;
+    border-radius: 7px;
+    font-size: 12px;
+    color: #475569;
+}
+
+.hotel-bottom {
+    border-top: 1px solid #e5e7eb;
+    padding-top: 18px;
+    margin-top: 15px;
+}
+
+.hotel-price {
+    font-size: 23px;
+    font-weight: bold;
+    color: #0f172a;
+    margin-bottom: 15px;
+}
+
+.price-label {
+    font-size: 12px;
+    font-weight: normal;
+    color: #64748b;
+}
+
+
+/* ================================
+   BUTTON
+================================ */
+
+.select-btn {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.select-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 15px rgba(37,99,235,0.25);
+}
+
+
+/* ================================
+   PLACES
+================================ */
+
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.category-card {
+    background: white;
+    border-radius: 18px;
+    padding: 27px 20px;
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 6px 20px rgba(15,23,42,0.07);
+    transition: 0.3s;
+}
+
+.category-card:hover {
+    transform: translateY(-7px);
+    border-color: #93c5fd;
+    box-shadow: 0 13px 28px rgba(37,99,235,0.13);
+}
+
+.category-icon {
+    width: 70px;
+    height: 70px;
+    margin: auto;
+    background: #eff6ff;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 38px;
+}
+
+.category-card h3 {
+    margin: 16px 0 8px;
+    color: #1e3a8a;
+    font-size: 19px;
+}
+
+.category-card p {
+    color: #64748b;
+    line-height: 1.5;
+    margin: 0;
+    font-size: 14px;
+}
+
+
+/* ================================
+   PLACE RESULTS
+================================ */
+
+.place-results {
+    margin-top: 35px;
+}
+
+.results-header {
+    background: linear-gradient(135deg, #2563eb, #1e40af);
+    color: white;
+    padding: 22px;
+    border-radius: 16px;
+    margin-bottom: 18px;
+}
+
+.results-header h2 {
+    margin: 0 0 5px;
+}
+
+.results-header p {
+    margin: 0;
+    opacity: 0.9;
+}
+
+.place-box {
+    background: white;
+    padding: 20px;
+    margin-bottom: 13px;
+    border-radius: 14px;
+    border-left: 5px solid #2563eb;
+    box-shadow: 0 4px 15px rgba(15,23,42,0.07);
+    transition: 0.3s;
+}
+
+.place-box:hover {
+    transform: translateX(4px);
+}
+
+.place-box strong {
+    font-size: 17px;
+    color: #1e3a8a;
+}
+
+.place-box p {
+    color: #64748b;
+    margin: 8px 0 0;
+}
+
+
+/* ================================
+   BACK BUTTON
+================================ */
+
+.back-btn {
+    display: inline-block;
+    margin-top: 35px;
+    padding: 13px 22px;
+    background: white;
+    color: #2563eb;
+    text-decoration: none;
+    border: 2px solid #2563eb;
+    border-radius: 10px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.back-btn:hover {
+    background: #2563eb;
+    color: white;
+}
+
+
+/* ================================
+   FOOTER
+================================ */
+
+footer {
+    margin-top: 30px;
+    background: #0f172a;
+    color: #cbd5e1;
+    text-align: center;
+    padding: 30px 20px;
+    line-height: 1.7;
+}
+
+footer strong {
+    color: white;
+}
+
+footer p {
+    margin: 5px 0;
+}
+
+
+/* ================================
+   MOBILE
+================================ */
+
+@media (max-width: 768px) {
+
+    .navbar {
+        flex-direction: column;
+        padding: 16px;
+    }
+
+    .nav-links {
+        width: 100%;
+    }
+
+    .nav-links a {
+        font-size: 13px;
+    }
+
+    .container {
+        padding: 25px 15px;
+    }
+
+    .page-header {
+        padding: 35px 15px;
+    }
+
+    .page-header h1 {
+        font-size: 29px;
+    }
+
+    .page-header p {
+        font-size: 15px;
+    }
+
+    .section-heading h2 {
+        font-size: 23px;
+    }
+
+}
+
+
+/* ================================
+   SMALL MOBILE
+================================ */
+
+@media (max-width: 480px) {
+
+    .logo {
+        font-size: 18px;
+    }
+
+    .nav-links {
+        gap: 4px;
+    }
+
+    .nav-links a {
+        padding: 7px 8px;
+        font-size: 12px;
+    }
+
+    .hotel-grid,
+    .category-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+/* ================================
+   PRINT
+================================ */
+
+@media print {
+
+    .navbar,
+    .back-btn,
+    footer,
+    .select-btn {
+        display: none;
+    }
+
+    body {
+        background: white;
+    }
+
+    .container {
+        max-width: 100%;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- ================================
+     NAVBAR
+================================ -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        ✈️ AI Travel Planner
+    </div>
+
+    <div class="nav-links">
+
+        <a href="dashboard.html">Dashboard</a>
+
+        <a href="planner.html">Plan Trip</a>
+
+        <a href="itinerary.html">Itinerary</a>
+
+        <a href="hotels.html">Hotels</a>
+
+        <a href="booking.html">Booking</a>
+
+        <a href="my-trips.html">My Trips</a>
+
+    </div>
+
+</nav>
+
+
+
+<!-- ================================
+     MAIN
+================================ -->
+
+<div class="container">
+
+
+    <!-- HERO -->
+
+    <div class="page-header">
+
+        <div class="hero-icon">
+            🏨✈️
+        </div>
+
+        <h1>
+            Hotels & Places
+        </h1>
+
+        <p>
+            Discover hotels, attractions and experiences
+            in
+            <strong
+                id="destinationName"
+                class="destination-name">
+                Your Destination
+            </strong>
+        </p>
+
+    </div>
+
+
+
+    <!-- ================================
+         HOTELS
+    ================================= -->
+
+    <div class="section-heading">
+
+        <h2>
+            🏨 Recommended Hotels
+        </h2>
+
+        <p>
+            Choose a comfortable stay for your journey.
+        </p>
+
+    </div>
+
+
+    <div class="hotel-grid">
+
+
+        <!-- HOTEL 1 -->
+
+        <div class="hotel-card">
+
+            <div class="hotel-top">
+
+                <div class="hotel-icon">
+                    🏨
+                </div>
+
+                <div class="hotel-rating">
+                    ⭐ 4.3/5
+                </div>
+
+            </div>
+
+            <h2>
+                Grand Palace Hotel
+            </h2>
+
+            <p class="hotel-description">
+                Comfortable rooms with modern facilities
+                for a relaxing travel experience.
+            </p>
+
+            <div class="hotel-features">
+
+                <span class="feature">📶 Wi-Fi</span>
+
+                <span class="feature">🍽️ Restaurant</span>
+
+                <span class="feature">🚗 Parking</span>
+
+            </div>
+
+            <div class="hotel-bottom">
+
+                <div class="hotel-price">
+                    ₹2,500
+                    <span class="price-label">
+                        / night
+                    </span>
+                </div>
+
+                <button
+                    class="select-btn"
+                    onclick="selectHotel('Grand Palace Hotel',2500)">
+
+                    Select Hotel →
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- HOTEL 2 -->
+
+        <div class="hotel-card">
+
+            <div class="hotel-top">
+
+                <div class="hotel-icon">
+                    🏨
+                </div>
+
+                <div class="hotel-rating">
+                    ⭐ 4.6/5
+                </div>
+
+            </div>
+
+            <h2>
+                Royal Stay Resort
+            </h2>
+
+            <p class="hotel-description">
+                Premium rooms and excellent facilities
+                for a comfortable and enjoyable stay.
+            </p>
+
+            <div class="hotel-features">
+
+                <span class="feature">🏊 Pool</span>
+
+                <span class="feature">🍽️ Restaurant</span>
+
+                <span class="feature">📶 Wi-Fi</span>
+
+            </div>
+
+            <div class="hotel-bottom">
+
+                <div class="hotel-price">
+                    ₹3,200
+                    <span class="price-label">
+                        / night
+                    </span>
+                </div>
+
+                <button
+                    class="select-btn"
+                    onclick="selectHotel('Royal Stay Resort',3200)">
+
+                    Select Hotel →
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- HOTEL 3 -->
+
+        <div class="hotel-card">
+
+            <div class="hotel-top">
+
+                <div class="hotel-icon">
+                    🌴
+                </div>
+
+                <div class="hotel-rating">
+                    ⭐ 4.4/5
+                </div>
+
+            </div>
+
+            <h2>
+                Sunrise Resort
+            </h2>
+
+            <p class="hotel-description">
+                Scenic surroundings with family-friendly
+                rooms and convenient facilities.
+            </p>
+
+            <div class="hotel-features">
+
+                <span class="feature">🌄 Scenic View</span>
+
+                <span class="feature">👨‍👩‍👧 Family Rooms</span>
+
+                <span class="feature">🚗 Parking</span>
+
+            </div>
+
+            <div class="hotel-bottom">
+
+                <div class="hotel-price">
+                    ₹4,000
+                    <span class="price-label">
+                        / night
+                    </span>
+                </div>
+
+                <button
+                    class="select-btn"
+                    onclick="selectHotel('Sunrise Resort',4000)">
+
+                    Select Hotel →
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================================
+         PLACES
+    ================================= -->
+
+    <div class="section-heading">
+
+        <h2>
+            📍 Popular Places
+        </h2>
+
+        <p>
+            Select a category to explore places
+            around your destination.
+        </p>
+
+    </div>
+
+
+    <div class="category-grid">
+
+
+        <!-- SHOPPING -->
+
+        <div
+            class="category-card"
+            onclick="showPlaces('Shopping')">
+
+            <div class="category-icon">
+                🛍️
+            </div>
+
+            <h3>
+                Shopping
+            </h3>
+
+            <p>
+                Explore popular shopping areas,
+                markets and malls.
+            </p>
+
+        </div>
+
+
+
+        <!-- BEACHES -->
+
+        <div
+            class="category-card"
+            onclick="showPlaces('Beaches')">
+
+            <div class="category-icon">
+                🏖️
+            </div>
+
+            <h3>
+                Beaches
+            </h3>
+
+            <p>
+                Discover beautiful beaches and
+                relaxing seaside locations.
+            </p>
+
+        </div>
+
+
+
+        <!-- FOOD -->
+
+        <div
+            class="category-card"
+            onclick="showPlaces('Local Food')">
+
+            <div class="category-icon">
+                🍛
+            </div>
+
+            <h3>
+                Local Food
+            </h3>
+
+            <p>
+                Discover famous local food and
+                traditional dishes.
+            </p>
+
+        </div>
+
+
+
+        <!-- NATURE -->
+
+        <div
+            class="category-card"
+            onclick="showPlaces('Nature')">
+
+            <div class="category-icon">
+                🌿
+            </div>
+
+            <h3>
+                Nature
+            </h3>
+
+            <p>
+                Explore peaceful natural locations
+                and scenic views.
+            </p>
+
+        </div>
+
+
+
+        <!-- MOUNTAINS -->
+
+        <div
+            class="category-card"
+            onclick="showPlaces('Mountains')">
+
+            <div class="category-icon">
+                ⛰️
+            </div>
+
+            <h3>
+                Mountains
+            </h3>
+
+            <p>
+                Explore mountains, hills and
+                beautiful viewpoints.
+            </p>
+
+        </div>
+
+
+
+        <!-- HISTORICAL -->
+
+        <div
+            class="category-card"
+            onclick="showPlaces('Historical Places')">
+
+            <div class="category-icon">
+                🏛️
+            </div>
+
+            <h3>
+                Historical Places
+            </h3>
+
+            <p>
+                Visit historical monuments,
+                forts and cultural places.
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================================
+         RESULTS
+    ================================= -->
+
+    <div
+        id="placeResults"
+        class="place-results">
+    </div>
+
+
+
+    <!-- BACK -->
+
+    <a
+        href="itinerary.html"
+        class="back-btn">
+
+        ← Back to Itinerary
+
+    </a>
+
+</div>
+
+
+
+<!-- ================================
+     FOOTER
+================================ -->
+
+<footer>
+
+    <p>
+        <strong>Project Developer:</strong>
+        Pratiksha Anil Kharat
+    </p>
+
+    <p>
+        <strong>Branch:</strong>
+        Computer Science Engineering
+    </p>
+
+    <p>
+        <strong>College:</strong>
+        AGCE Polytechnic College, Satara
+    </p>
+
+    <p>
+        <strong>Inplant Training:</strong>
+        2026
+    </p>
+
+    <p>
+        © 2026 AI Travel Planner
+    </p>
+
+</footer>
+
+
+
+<script>
+
+/* ================================
+   GET TRIP
+================================ */
+
+const trip =
+    JSON.parse(
+        localStorage.getItem("aiTravelTrip")
+    ) || {};
+
+
+const destination =
+    trip.destination || "Your Destination";
+
+
+document.getElementById(
+    "destinationName"
+).textContent = destination;
+
+
+
+/* ================================
+   PLACE DATA
+================================ */
+
+const places = {
+
+    "Shopping": [
+
+        "🛍️ Local Market",
+
+        "🛍️ Main Shopping Street",
+
+        "🛍️ City Shopping Mall"
+
+    ],
+
+
+    "Beaches": [
+
+        "🏖️ Main Beach",
+
+        "🏖️ Sunset Beach",
+
+        "🏖️ Family Beach"
+
+    ],
+
+
+    "Local Food": [
+
+        "🍛 Local Food Street",
+
+        "🍛 Traditional Food Market",
+
+        "🍛 Famous Local Restaurant Area"
+
+    ],
+
+
+    "Nature": [
+
+        "🌿 Nature Park",
+
+        "🌿 Green Valley",
+
+        "🌿 Scenic Garden"
+
+    ],
+
+
+    "Mountains": [
+
+        "⛰️ Mountain View Point",
+
+        "⛰️ Hill Station",
+
+        "⛰️ Scenic Mountain Area"
+
+    ],
+
+
+    "Historical Places": [
+
+        "🏛️ Historical Fort",
+
+        "🏛️ Ancient Monument",
+
+        "🏛️ Heritage Museum"
+
+    ]
+
+};
+
+
+
+/* ================================
+   SHOW PLACES
+================================ */
+
+function showPlaces(category) {
+
+    const result =
+        document.getElementById("placeResults");
+
+
+    const selectedPlaces =
+        places[category] || [];
+
+
+    result.innerHTML = `
+
+        <div class="results-header">
+
+            <h2>
+                📍 ${category}
+            </h2>
+
+            <p>
+                Suggested ${category.toLowerCase()}
+                for your trip to ${destination}
+            </p>
+
+        </div>
+
+
+        ${selectedPlaces.map(function(place) {
+
+            return `
+
+                <div class="place-box">
+
+                    <strong>
+                        ${place}
+                    </strong>
+
+                    <p>
+                        Explore this type of attraction
+                        during your trip to
+                        <strong>${destination}</strong>.
+                    </p>
+
+                </div>
+
+            `;
+
+        }).join("")}
+
+    `;
+
+
+    result.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+
+}
+
+
+
+/* ================================
+   SELECT HOTEL
+================================ */
+
+function selectHotel(name, price) {
+
+    localStorage.setItem(
+
+        "selectedHotel",
+
+        JSON.stringify({
+
+            name: name,
+
+            price: price
+
+        })
+
+    );
+
+
+    window.location.href =
+        "booking.html";
+
+}
+
+</script>
+
+
+</body>
+</html>
