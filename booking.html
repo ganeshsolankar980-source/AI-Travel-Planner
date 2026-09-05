@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Booking - AI Travel Planner</title>
+
+<style>
+
+/* ================================
+   RESET
+================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* ================================
+   BODY
+================================ */
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7fb;
+    color: #1e293b;
+}
+
+
+/* ================================
+   NAVBAR
+================================ */
+
+.navbar {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    padding: 17px 6%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.12);
+}
+
+.logo {
+    color: white;
+    font-size: 21px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.nav-links {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.nav-links a:hover {
+    background: rgba(255,255,255,0.18);
+}
+
+
+/* ================================
+   HEADER
+================================ */
+
+.page-header {
+    text-align: center;
+    padding: 45px 20px 25px;
+}
+
+.header-icon {
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+.page-header h1 {
+    color: #0f172a;
+    font-size: 34px;
+    margin-bottom: 10px;
+}
+
+.page-header p {
+    color: #64748b;
+    font-size: 16px;
+}
+
+
+/* ================================
+   MAIN CONTAINER
+================================ */
+
+.container {
+    width: 92%;
+    max-width: 850px;
+    margin: 10px auto 55px;
+}
+
+
+/* ================================
+   BOOKING CARD
+================================ */
+
+.booking-card {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 8px 28px rgba(15,23,42,0.09);
+    border: 1px solid #e5e7eb;
+}
+
+
+/* ================================
+   HOTEL SUMMARY
+================================ */
+
+.hotel-box {
+    background: linear-gradient(135deg, #eff6ff, #dbeafe);
+    padding: 23px;
+    border-radius: 16px;
+    margin-bottom: 30px;
+    border: 1px solid #bfdbfe;
+}
+
+.hotel-label {
+    color: #64748b;
+    font-size: 13px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 7px;
+}
+
+.hotel-box h2 {
+    color: #1d4ed8;
+    font-size: 23px;
+    margin-bottom: 12px;
+}
+
+.destination {
+    color: #475569;
+    font-size: 15px;
+}
+
+.price {
+    color: #15803d;
+    font-weight: bold;
+    font-size: 22px;
+    margin-top: 14px;
+}
+
+.price small {
+    font-size: 13px;
+    color: #64748b;
+    font-weight: normal;
+}
+
+
+/* ================================
+   FORM TITLE
+================================ */
+
+.form-title {
+    margin-bottom: 22px;
+}
+
+.form-title h2 {
+    font-size: 22px;
+    color: #0f172a;
+    margin-bottom: 5px;
+}
+
+.form-title p {
+    color: #64748b;
+    font-size: 14px;
+}
+
+
+/* ================================
+   FORM
+================================ */
+
+.form-group {
+    margin-bottom: 19px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #334155;
+    font-size: 14px;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    font-size: 15px;
+    outline: none;
+    background: white;
+    transition: 0.3s;
+}
+
+input:focus,
+select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.10);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+
+/* ================================
+   CONFIRM BUTTON
+================================ */
+
+.book-button {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 11px;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: 0.3s;
+}
+
+.book-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(37,99,235,0.25);
+}
+
+
+/* ================================
+   SUCCESS MESSAGE
+================================ */
+
+.success {
+    display: none;
+    margin-top: 25px;
+    padding: 22px;
+    background: #ecfdf5;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+    border-radius: 15px;
+    line-height: 1.8;
+}
+
+.success h3 {
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+.success p {
+    margin: 3px 0;
+}
+
+.success .book-button {
+    background: linear-gradient(135deg, #16a34a, #15803d);
+}
+
+
+/* ================================
+   BACK BUTTON
+================================ */
+
+.back-btn {
+    display: block;
+    width: fit-content;
+    margin: 25px auto 0;
+    padding: 12px 22px;
+    background: white;
+    color: #2563eb;
+    border: 2px solid #2563eb;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.back-btn:hover {
+    background: #2563eb;
+    color: white;
+}
+
+
+/* ================================
+   FOOTER
+================================ */
+
+footer {
+    background: #0f172a;
+    color: #cbd5e1;
+    text-align: center;
+    padding: 30px 20px;
+    line-height: 1.8;
+}
+
+footer strong {
+    color: white;
+}
+
+footer p {
+    margin: 4px 0;
+}
+
+
+/* ================================
+   MOBILE
+================================ */
+
+@media (max-width: 700px) {
+
+    .navbar {
+        flex-direction: column;
+        padding: 16px;
+    }
+
+    .nav-links {
+        width: 100%;
+    }
+
+    .nav-links a {
+        font-size: 12px;
+        padding: 7px 8px;
+    }
+
+    .page-header {
+        padding-top: 30px;
+    }
+
+    .page-header h1 {
+        font-size: 28px;
+    }
+
+    .container {
+        width: 94%;
+    }
+
+    .booking-card {
+        padding: 20px;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+}
+
+
+/* ================================
+   SMALL MOBILE
+================================ */
+
+@media (max-width: 430px) {
+
+    .logo {
+        font-size: 18px;
+    }
+
+    .hotel-box h2 {
+        font-size: 20px;
+    }
+
+    .price {
+        font-size: 20px;
+    }
+
+}
+
+
+/* ================================
+   PRINT
+================================ */
+
+@media print {
+
+    .navbar,
+    .back-btn,
+    footer,
+    form {
+        display: none;
+    }
+
+    body {
+        background: white;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 100%;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================================
+     NAVBAR
+================================ -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        ✈️ AI Travel Planner
+    </div>
+
+    <div class="nav-links">
+
+        <a href="dashboard.html">
+            Dashboard
+        </a>
+
+        <a href="planner.html">
+            Plan Trip
+        </a>
+
+        <a href="itinerary.html">
+            Itinerary
+        </a>
+
+        <a href="hotels.html">
+            Hotels
+        </a>
+
+        <a href="booking.html">
+            Booking
+        </a>
+
+        <a href="my-trips.html">
+            My Trips
+        </a>
+
+    </div>
+
+</nav>
+
+
+
+<!-- ================================
+     HEADER
+================================ -->
+
+<div class="page-header">
+
+    <div class="header-icon">
+        📝🏨
+    </div>
+
+    <h1>
+        Hotel Booking
+    </h1>
+
+    <p>
+        Complete your booking details securely
+    </p>
+
+</div>
+
+
+
+<!-- ================================
+     MAIN
+================================ -->
+
+<div class="container">
+
+
+    <div class="booking-card">
+
+
+        <!-- HOTEL SUMMARY -->
+
+        <div class="hotel-box">
+
+            <div class="hotel-label">
+                Selected Hotel
+            </div>
+
+            <h2 id="hotelName">
+                🏨 Selected Hotel
+            </h2>
+
+            <p class="destination">
+                📍 Destination:
+                <strong id="destination">
+                    Your Destination
+                </strong>
+            </p>
+
+            <div class="price">
+
+                ₹<span id="hotelPrice">0</span>
+
+                <small>
+                    / night
+                </small>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- FORM TITLE -->
+
+        <div class="form-title">
+
+            <h2>
+                👤 Guest Information
+            </h2>
+
+            <p>
+                Enter your details to complete the booking.
+            </p>
+
+        </div>
+
+
+
+        <!-- BOOKING FORM -->
+
+        <form id="bookingForm">
+
+
+            <!-- NAME -->
+
+            <div class="form-group">
+
+                <label>
+                    👤 Full Name
+                </label>
+
+                <input
+                    type="text"
+                    id="fullName"
+                    placeholder="Enter your full name"
+                    required
+                >
+
+            </div>
+
+
+
+            <!-- EMAIL -->
+
+            <div class="form-group">
+
+                <label>
+                    📧 Email Address
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="Enter your email address"
+                    required
+                >
+
+            </div>
+
+
+
+            <!-- MOBILE -->
+
+            <div class="form-group">
+
+                <label>
+                    📱 Mobile Number
+                </label>
+
+                <input
+                    type="tel"
+                    id="mobile"
+                    placeholder="Enter your mobile number"
+                    required
+                >
+
+            </div>
+
+
+
+            <!-- DATES -->
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label>
+                        📅 Check-in
+                    </label>
+
+                    <input
+                        type="date"
+                        id="checkin"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        📅 Check-out
+                    </label>
+
+                    <input
+                        type="date"
+                        id="checkout"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+
+            <!-- GUESTS & ROOMS -->
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label>
+                        👥 Guests
+                    </label>
+
+                    <select id="guests">
+
+                        <option value="1">
+                            1 Guest
+                        </option>
+
+                        <option value="2" selected>
+                            2 Guests
+                        </option>
+
+                        <option value="3">
+                            3 Guests
+                        </option>
+
+                        <option value="4">
+                            4 Guests
+                        </option>
+
+                        <option value="5">
+                            5 Guests
+                        </option>
+
+                        <option value="6">
+                            6 Guests
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        🛏️ Rooms
+                    </label>
+
+                    <select id="rooms">
+
+                        <option value="1" selected>
+                            1 Room
+                        </option>
+
+                        <option value="2">
+                            2 Rooms
+                        </option>
+
+                        <option value="3">
+                            3 Rooms
+                        </option>
+
+                        <option value="4">
+                            4 Rooms
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- CONFIRM -->
+
+            <button
+                type="submit"
+                class="book-button">
+
+                ✅ Confirm Booking
+
+            </button>
+
+
+        </form>
+
+
+
+        <!-- SUCCESS -->
+
+        <div
+            id="successMessage"
+            class="success">
+        </div>
+
+
+    </div>
+
+
+
+    <!-- BACK -->
+
+    <a
+        href="hotels.html"
+        class="back-btn">
+
+        ← Back to Hotels
+
+    </a>
+
+
+</div>
+
+
+
+<!-- ================================
+     FOOTER
+================================ -->
+
+<footer>
+
+    <p>
+        <strong>Project Developer:</strong>
+        Pratiksha Anil Kharat
+    </p>
+
+    <p>
+        <strong>Branch:</strong>
+        Computer Science Engineering
+    </p>
+
+    <p>
+        <strong>College:</strong>
+        AGCE Polytechnic College, Satara
+    </p>
+
+    <p>
+        <strong>Inplant Training:</strong>
+        2026
+    </p>
+
+    <p>
+        © 2026 AI Travel Planner
+    </p>
+
+</footer>
+
+
+
+<script>
+
+/* ================================
+   GET SELECTED HOTEL
+================================ */
+
+const selectedHotel =
+    localStorage.getItem("selectedHotel");
+
+
+/* ================================
+   GET TRIP
+================================ */
+
+const tripData =
+    localStorage.getItem("aiTravelTrip");
+
+
+
+/* ================================
+   DISPLAY HOTEL
+================================ */
+
+if (selectedHotel) {
+
+    const hotel =
+        JSON.parse(selectedHotel);
+
+    document.getElementById("hotelName")
+        .innerText =
+        "🏨 " + hotel.name;
+
+    document.getElementById("hotelPrice")
+        .innerText =
+        hotel.price;
+}
+
+
+
+/* ================================
+   DISPLAY DESTINATION
+================================ */
+
+if (tripData) {
+
+    const trip =
+        JSON.parse(tripData);
+
+    document.getElementById("destination")
+        .innerText =
+        trip.destination ||
+        "Your Destination";
+}
+
+
+
+/* ================================
+   BOOKING FORM
+================================ */
+
+document.getElementById("bookingForm")
+.addEventListener(
+    "submit",
+    function(event) {
+
+        event.preventDefault();
+
+
+        const fullName =
+            document.getElementById("fullName").value.trim();
+
+
+        const email =
+            document.getElementById("email").value.trim();
+
+
+        const mobile =
+            document.getElementById("mobile").value.trim();
+
+
+        const checkin =
+            document.getElementById("checkin").value;
+
+
+        const checkout =
+            document.getElementById("checkout").value;
+
+
+        const guests =
+            document.getElementById("guests").value;
+
+
+        const rooms =
+            document.getElementById("rooms").value;
+
+
+
+        /* DATE VALIDATION */
+
+        if (
+            !checkin ||
+            !checkout ||
+            new Date(checkout) <= new Date(checkin)
+        ) {
+
+            alert(
+                "⚠️ Check-out date must be after check-in date."
+            );
+
+            return;
+
+        }
+
+
+
+        /* HOTEL */
+
+        const hotel =
+            selectedHotel
+            ? JSON.parse(selectedHotel)
+            : {
+                name: "Selected Hotel",
+                price: 0
+            };
+
+
+
+        /* TRIP */
+
+        const trip =
+            tripData
+            ? JSON.parse(tripData)
+            : {
+                destination:
+                "Your Destination"
+            };
+
+
+
+        /* BOOKING OBJECT */
+
+        const booking = {
+
+            hotel:
+                hotel.name,
+
+            hotelPrice:
+                hotel.price,
+
+            destination:
+                trip.destination ||
+                "Your Destination",
+
+            fullName:
+                fullName,
+
+            email:
+                email,
+
+            mobile:
+                mobile,
+
+            checkin:
+                checkin,
+
+            checkout:
+                checkout,
+
+            guests:
+                guests,
+
+            rooms:
+                rooms,
+
+            bookingId:
+                "AIP" + Date.now()
+
+        };
+
+
+
+        /* SAVE BOOKING */
+
+        localStorage.setItem(
+            "travelBooking",
+            JSON.stringify(booking)
+        );
+
+
+
+        /* SUCCESS MESSAGE */
+
+        document.getElementById(
+            "successMessage"
+        ).style.display = "block";
+
+
+        document.getElementById(
+            "successMessage"
+        ).innerHTML = `
+
+            <h3>
+                🎉 Booking Confirmed!
+            </h3>
+
+            <p>
+                <strong>Booking ID:</strong>
+                ${booking.bookingId}
+            </p>
+
+            <p>
+                <strong>Hotel:</strong>
+                ${booking.hotel}
+            </p>
+
+            <p>
+                <strong>Destination:</strong>
+                ${booking.destination}
+            </p>
+
+            <p>
+                <strong>Check-in:</strong>
+                ${booking.checkin}
+            </p>
+
+            <p>
+                <strong>Check-out:</strong>
+                ${booking.checkout}
+            </p>
+
+            <p>
+                <strong>Guests:</strong>
+                ${booking.guests}
+            </p>
+
+            <p>
+                <strong>Rooms:</strong>
+                ${booking.rooms}
+            </p>
+
+            <br>
+
+            <button
+                class="book-button"
+                onclick="window.location.href='ticket.html'">
+
+                🎟️ View Digital Ticket
+
+            </button>
+
+        `;
+
+
+        /* SCROLL TO SUCCESS */
+
+        document.getElementById(
+            "successMessage"
+        ).scrollIntoView({
+            behavior: "smooth"
+        });
+
+    }
+);
+
+</script>
+
+
+</body>
+</html>
